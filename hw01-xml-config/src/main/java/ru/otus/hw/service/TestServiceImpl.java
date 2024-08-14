@@ -9,6 +9,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
+    public static final String ANSWER_FORMAT_TEMPLATE = "%d %s";
 
     private final IOService ioService;
 
@@ -19,12 +20,17 @@ public class TestServiceImpl implements TestService {
         ioService.printLine("");
         ioService.printFormattedLine("Please answer the questions below%n");
         var questions = dao.findAll();
-        questions.forEach(question -> ioService.printFormattedLine(question.text(), getListAnswers(question)));
+        printQuestions(questions);
     }
 
-    private List<String> getListAnswers(Question question) {
-        return question.answers().stream()
-                .map(Answer::text)
-                .toList();
+    private void printQuestions(List<Question> questions) {
+        questions.forEach(question -> {
+            ioService.printLine(question.text());
+            final int[] answerCount = {1};
+            question.answers().stream()
+                    .map(Answer::text)
+                    .forEach(answer -> ioService.printFormattedLine(ANSWER_FORMAT_TEMPLATE, answerCount[0]++, answer));
+            ioService.printLine("");
+        });
     }
 }

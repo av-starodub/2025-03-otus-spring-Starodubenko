@@ -18,7 +18,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @DisplayName("TestServiceImplTest")
 public class TestServiceImplTest {
-    private static final List<Question> QUESTIONS = List.of(
+
+    private final List<Question> questions = List.of(
             new Question("q1", List.of(new Answer("A", false), new Answer("B", true)))
     );
 
@@ -34,8 +35,16 @@ public class TestServiceImplTest {
     @Test
     @DisplayName("Should get questions from QuestionDao and pass them to IOService")
     void executeTest() {
-        when(questionDao.findAll()).thenReturn(QUESTIONS);
+        var answerTemplate = TestServiceImpl.ANSWER_FORMAT_TEMPLATE;
+
+        when(questionDao.findAll()).thenReturn(questions);
+
         testService.executeTest();
-        verify(ioService).printFormattedLine("q1", List.of("A", "B"));
+
+        var expectedArgs = List.of(new Object[]{1, "A"}, new Object[]{2, "B"});
+
+        verify(ioService).printLine("q1");
+        verify(ioService).printFormattedLine(answerTemplate, expectedArgs.get(0));
+        verify(ioService).printFormattedLine(answerTemplate, expectedArgs.get(1));
     }
 }
