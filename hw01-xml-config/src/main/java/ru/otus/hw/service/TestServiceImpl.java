@@ -9,6 +9,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
+    public static final String QUESTION_FORMAT_TEMPLATE = "Question %d. %s";
+
     public static final String ANSWER_FORMAT_TEMPLATE = "%d %s";
 
     private final IOService ioService;
@@ -24,8 +26,9 @@ public class TestServiceImpl implements TestService {
     }
 
     private void printQuestions(List<Question> questions) {
+        final int[] questionCount = {1};
         questions.forEach(question -> {
-            ioService.printLine(question.text());
+            ioService.printFormattedLine(QUESTION_FORMAT_TEMPLATE, questionCount[0]++, question.text());
             final int[] answerCount = {1};
             question.answers().stream()
                     .map(Answer::text)

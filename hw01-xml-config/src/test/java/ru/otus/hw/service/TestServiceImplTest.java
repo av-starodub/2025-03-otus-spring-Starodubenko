@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class TestServiceImplTest {
 
     private final List<Question> questions = List.of(
-            new Question("q1", List.of(new Answer("A", false), new Answer("B", true)))
+            new Question("What true?", List.of(new Answer("A", false), new Answer("B", true)))
     );
 
     @Mock
@@ -35,16 +35,18 @@ public class TestServiceImplTest {
     @Test
     @DisplayName("Should get questions from QuestionDao and pass them to IOService")
     void executeTest() {
+        var questionTemplate = TestServiceImpl.QUESTION_FORMAT_TEMPLATE;
         var answerTemplate = TestServiceImpl.ANSWER_FORMAT_TEMPLATE;
 
         when(questionDao.findAll()).thenReturn(questions);
 
         testService.executeTest();
 
-        var expectedArgs = List.of(new Object[]{1, "A"}, new Object[]{2, "B"});
+        var expectedQuestionsArgs = new Object[]{1, "What true?"};
+        var expectedAnswersArgs = List.of(new Object[]{1, "A"}, new Object[]{2, "B"});
 
-        verify(ioService).printLine("q1");
-        verify(ioService).printFormattedLine(answerTemplate, expectedArgs.get(0));
-        verify(ioService).printFormattedLine(answerTemplate, expectedArgs.get(1));
+        verify(ioService).printFormattedLine(questionTemplate, expectedQuestionsArgs);
+        verify(ioService).printFormattedLine(answerTemplate, expectedAnswersArgs.get(0));
+        verify(ioService).printFormattedLine(answerTemplate, expectedAnswersArgs.get(1));
     }
 }
