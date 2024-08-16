@@ -2,7 +2,6 @@ package ru.otus.hw.service;
 
 import lombok.RequiredArgsConstructor;
 import ru.otus.hw.dao.QuestionDao;
-import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
 import java.util.List;
@@ -26,14 +25,15 @@ public class TestServiceImpl implements TestService {
     }
 
     private void printQuestions(List<Question> questions) {
-        final int[] questionCount = {1};
-        questions.forEach(question -> {
-            ioService.printFormattedLine(QUESTION_FORMAT_TEMPLATE, questionCount[0]++, question.text());
-            final int[] answerCount = {1};
-            question.answers().stream()
-                    .map(Answer::text)
-                    .forEach(answer -> ioService.printFormattedLine(ANSWER_FORMAT_TEMPLATE, answerCount[0]++, answer));
+        var questionsCount = 1;
+        for (var question : questions) {
+            ioService.printFormattedLine(QUESTION_FORMAT_TEMPLATE, questionsCount++, question.text());
+            var answers = question.answers();
+            var answersCount = 1;
+            for (var answer : answers) {
+                ioService.printFormattedLine(ANSWER_FORMAT_TEMPLATE, answersCount++, answer.text());
+            }
             ioService.printLine("");
-        });
+        }
     }
 }
