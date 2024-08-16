@@ -1,12 +1,16 @@
-name: Build Projects
+name: Build Changed Modules
 
 on:
   pull_request:
+    types: [ opened, synchronize, reopened ]
+
+defaults:
+  run:
+    shell: bash
 
 jobs:
-  build-hw01-xml-config:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -18,7 +22,31 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build Project 1
+      - name: Determine changed modules
+        id: changed-modules
         run: |
-          cd hw01-xml-config
-          mvn verify --no-transfer-progress
+          # Get a list of changed files
+          changed_files=$(git diff --name-only origin/main HEAD)
+          
+          # Identify Modified Modules
+          changed_modules=""
+          for file in $changed_files; do
+            module=$(echo $file | cut -d '/' -f1)
+            if [[ $module != "." && $module != "" && -d $module ]]; then
+              if [[ ! " ${changed_modules[@]} " =~ " ${module} " ]]; then
+                changed_modules+="$module,"
+              fi
+            fi
+          done
+          
+          # Remove the last comma and print the result
+          changed_modules=${changed_modules%,}
+          echo "Changed modules: $changed_modules"
+          
+          # Set output for later use
+          echo "::set-output name=modules::$changed_modules"
+
+      - name: Build changed modules
+        if: steps.changed-modules.outputs.modules != ''
+        run: |
+          mvn -pl ${{ steps.changed-modules.outputs.modules }} -am verify --no-transfer-progress
