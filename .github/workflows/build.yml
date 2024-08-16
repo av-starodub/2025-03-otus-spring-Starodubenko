@@ -1,18 +1,16 @@
-name: Build Changed Modules
+name: Build
 
 on:
   pull_request:
-    types: [ opened, synchronize, reopened ]
-
-defaults:
-  run:
-    shell: bash
+    paths:
+      - '**/pom.xml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repo
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up JDK 17
@@ -20,33 +18,50 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
 
-      - name: Determine changed modules
-        id: changed-modules
+      - name: Get a list of changed files
+        id: get_changed_files
         run: |
-          # Get a list of changed files
-          changed_files=$(git diff --name-only origin/main HEAD)
+          # Fetch the latest changes from the main branch
+          git fetch origin master
+
+          # List changed files
+          changed_files=$(git diff --name-only origin/master HEAD)
+          echo "Changed files: $changed_files"
+
+          # Save changed files to environment variable
+          echo "changed_files=$(echo "$changed_files" | tr '\n' ' ')" >> $GITHUB_ENV
+
+      - name: Filter and format changed modules
+        id: filter_modules
+        run: |
+          # Extract directories from changed files
+          directories=$(echo "${{ env.changed_files }}" | grep -oP '^[^/]*' | sort -u)
           
-          # Identify Modified Modules
-          changed_modules=""
-          for file in $changed_files; do
-            module=$(echo $file | cut -d '/' -f1)
-            if [[ $module != "." && $module != "" && -d $module ]]; then
-              if [[ ! " ${changed_modules[@]} " =~ " ${module} " ]]; then
-                changed_modules+="$module,"
+          # Initialize an empty list of modules
+          modules=""
+
+          # Check each directory if it contains a pom.xml file and is listed in the root pom.xml
+          for dir in $directories; do
+            if [ -d "$dir" ] && [ -f "$dir/pom.xml" ] && [ "$dir" != ".github" ]; then
+              if grep -q "<module>$dir</module>" pom.xml; then
+                modules="$modules,$dir"
               fi
             fi
           done
-          
-          # Remove the last comma and print the result
-          changed_modules=${changed_modules%,}
-          echo "Changed modules: $changed_modules"
-          
-          # Set output for later use
-          echo "::set-output name=modules::$changed_modules"
 
-      - name: Build changed modules
-        if: steps.changed-modules.outputs.modules != ''
+          # Remove leading comma
+          modules=${modules#,}
+
+          echo "Building modules: $modules"
+          echo "modules=$modules" >> $GITHUB_ENV
+
+      - name: Build Maven modules
         run: |
-          mvn -pl ${{ steps.changed-modules.outputs.modules }} -am verify --no-transfer-progress
+          if [ -n "$modules" ]; then
+            mvn -pl $modules -am verify --no-transfer-progress
+          else
+            echo "No modules to build."
+          fi
+        env:
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.12-7/x64
