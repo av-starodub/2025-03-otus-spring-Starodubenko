@@ -17,6 +17,10 @@ public class TestServiceImpl implements TestService {
 
     public static final String ANSWER_FORMAT_TEMPLATE = "%d %s";
 
+    public static final String ASK_TEMPLATE_FOR_ONE_ANSWER = "Write answer and press enter";
+
+    public static final String ASK_TEMPLATE_FOR_MANY_ANSWER = "Write answers down separated by a space and press enter";
+
     private final IOService ioService;
 
     private final QuestionDao questionDao;
@@ -40,7 +44,7 @@ public class TestServiceImpl implements TestService {
             }
             var requiredCorrectAnswersCount = requiredCorrectAnswers.size();
             var studentAnswer = getStudentAnswer(requiredCorrectAnswersCount);
-            boolean isStudentAnswerValid = validateStudentAnswer(requiredCorrectAnswers, studentAnswer);
+            var isStudentAnswerValid = validateStudentAnswer(requiredCorrectAnswers, studentAnswer);
             testResult.applyAnswer(question, isStudentAnswerValid);
         }
         return testResult;
@@ -49,9 +53,9 @@ public class TestServiceImpl implements TestService {
     private String getStudentAnswer(int requiredCorrectAnswersCount) {
         var studentAnswer = "";
         if (requiredCorrectAnswersCount > 1) {
-            studentAnswer = ioService.readStringWithPrompt("Write answers down separated by a space and press enter");
+            studentAnswer = ioService.readStringWithPrompt(ASK_TEMPLATE_FOR_MANY_ANSWER);
         } else {
-            studentAnswer = ioService.readStringWithPrompt("Write answer and press enter");
+            studentAnswer = ioService.readStringWithPrompt(ASK_TEMPLATE_FOR_ONE_ANSWER);
         }
         return studentAnswer;
     }
