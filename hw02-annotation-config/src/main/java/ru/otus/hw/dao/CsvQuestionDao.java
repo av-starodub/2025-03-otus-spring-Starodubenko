@@ -10,7 +10,6 @@ import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class CsvQuestionDao implements QuestionDao {
                     .stream()
                     .map(QuestionDto::toDomainObject)
                     .toList();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new QuestionReadException("Cannot read resource ", e);
         }
     }
