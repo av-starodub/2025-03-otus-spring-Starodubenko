@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
+import ru.otus.hw.exceptions.AnswerFormatException;
 import ru.otus.hw.exceptions.QuestionReadException;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class CsvQuestionDaoIntegrationTest {
 
     private static final String VALID_QUESTIONS_FILE = "valid-questions.csv";
 
-    private static final String INVALID_QUESTIONS_FILE = "invalid-questions.csv";
+    private static final String INVALID_ANSWER_FORMAT_CSV = "invalid-answer-format.csv";
 
     private static final String NON_EXISTENT_FILE = "nonexistent-file.csv";
 
@@ -51,14 +52,17 @@ public class CsvQuestionDaoIntegrationTest {
     }
 
     @Test
-    @DisplayName("Should throw QuestionReadException when processing invalid questions file")
-    void checkExceptionWhenProcessingInvalidQuestionsFile() {
+    @DisplayName(
+            "Should throw QuestionReadException with cause AnswerFormatException when processing invalid answer format"
+    )
+    void checkExceptionWhenProcessingInvalidAnswerFormat() {
 
-        when(fileNameProvider.getTestFileName()).thenReturn(INVALID_QUESTIONS_FILE);
+        when(fileNameProvider.getTestFileName()).thenReturn(INVALID_ANSWER_FORMAT_CSV);
 
         assertThatThrownBy(() -> questionDao.findAll())
                 .isInstanceOf(QuestionReadException.class)
-                .hasMessageContaining("Cannot read resource");
+                .hasMessageContaining("Cannot read resource")
+                .hasRootCauseInstanceOf(AnswerFormatException.class);
     }
 
     @Test
