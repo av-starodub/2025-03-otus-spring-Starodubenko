@@ -6,7 +6,7 @@ import ru.otus.hw.exceptions.AnswerFormatException;
 
 public class AnswerCsvConverter extends AbstractCsvConverter {
 
-    public static final String ANSWER_FORMAT = ".*%true|false";
+    public static final String ANSWER_FORMAT = ".*%(true|false)";
 
     @Override
     public Object convertToRead(String value) {

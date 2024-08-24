@@ -10,6 +10,7 @@ import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.AnswerFormatException;
+import ru.otus.hw.exceptions.QuestionFormatException;
 import ru.otus.hw.exceptions.QuestionReadException;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class CsvQuestionDaoIntegrationTest {
     private static final String VALID_QUESTIONS_FILE = "valid-questions.csv";
 
     private static final String INVALID_ANSWER_FORMAT_CSV = "invalid-answer-format.csv";
+
+    private static final String INVALID_QUESTION_FORMAT_CSV = "invalid-question-format.csv";
 
     private static final String NON_EXISTENT_FILE = "nonexistent-file.csv";
 
@@ -53,7 +56,7 @@ public class CsvQuestionDaoIntegrationTest {
 
     @Test
     @DisplayName(
-            "Should throw QuestionReadException with cause AnswerFormatException when processing invalid answer format"
+            "Should throw QuestionReadException with cause AnswerFormatException when found invalid answer format"
     )
     void checkExceptionWhenProcessingInvalidAnswerFormat() {
 
@@ -63,6 +66,20 @@ public class CsvQuestionDaoIntegrationTest {
                 .isInstanceOf(QuestionReadException.class)
                 .hasMessageContaining("Cannot read resource")
                 .hasRootCauseInstanceOf(AnswerFormatException.class);
+    }
+
+    @Test
+    @DisplayName(
+            "Should throw QuestionReadException with cause QuestionFormatException when found invalid question format"
+    )
+    void checkExceptionWhenProcessingInvalidQuestionFormat() {
+
+        when(fileNameProvider.getTestFileName()).thenReturn(INVALID_QUESTION_FORMAT_CSV);
+
+        assertThatThrownBy(() -> questionDao.findAll())
+                .isInstanceOf(QuestionReadException.class)
+                .hasMessageContaining("Cannot read resource")
+                .hasRootCauseInstanceOf(QuestionFormatException.class);
     }
 
     @Test
