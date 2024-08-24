@@ -24,4 +24,12 @@ public class TestResult {
             rightAnswersCount++;
         }
     }
+
+    public String getStudentFullName() {
+        return student.getFullName();
+    }
+
+    public int getTestSize() {
+        return answeredQuestions.size();
+    }
 }

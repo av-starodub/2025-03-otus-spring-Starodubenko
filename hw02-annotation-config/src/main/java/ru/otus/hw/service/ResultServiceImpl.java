@@ -15,17 +15,17 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public void showResult(TestResult testResult) {
-        var studentFullName = testResult.getStudent().getFullName();
+        var studentFullName = testResult.getStudentFullName();
         var rightAnswerCount = testResult.getRightAnswersCount();
-        var answeredQuestions = testResult.getAnsweredQuestions().size();
+        var testSize = testResult.getTestSize();
         var requiredRightAnswerPercentToPass = testConfig.getRequiredPercentRightAnswersToPass();
 
-        var isPassed = isPassed(rightAnswerCount, answeredQuestions, requiredRightAnswerPercentToPass);
+        var isPassed = isPassed(rightAnswerCount, testSize, requiredRightAnswerPercentToPass);
 
         ioService.printLine("");
         ioService.printLine("Test results: ");
         ioService.printFormattedLine("Student: %s", studentFullName);
-        ioService.printFormattedLine("Answered questions count: %d", answeredQuestions);
+        ioService.printFormattedLine("Answered questions count: %d", testSize);
         ioService.printFormattedLine("Right answers count: %d", rightAnswerCount);
 
         if (isPassed) {
@@ -35,10 +35,8 @@ public class ResultServiceImpl implements ResultService {
         ioService.printLine("Sorry. You fail test.");
     }
 
-    private boolean isPassed(int rightAnswerCount, int answeredQuestions, int requiredRightAnswerPercentToPass) {
-        var requiredAnswersToPass = Math.ceil(
-                (double) answeredQuestions * requiredRightAnswerPercentToPass / 100
-        );
+    private boolean isPassed(int rightAnswerCount, int testSize, int requiredRightAnswerPercentToPass) {
+        var requiredAnswersToPass = Math.ceil((double) testSize * requiredRightAnswerPercentToPass / 100);
         return rightAnswerCount >= requiredAnswersToPass;
     }
 }
