@@ -15,16 +15,30 @@ public class ResultServiceImpl implements ResultService {
 
     @Override
     public void showResult(TestResult testResult) {
+        var studentFullName = testResult.getStudent().getFullName();
+        var rightAnswerCount = testResult.getRightAnswersCount();
+        var answeredQuestions = testResult.getAnsweredQuestions().size();
+        var requiredRightAnswerPercentToPass = testConfig.getRequiredPercentRightAnswersToPass();
+
+        var isPassed = isPassed(rightAnswerCount, answeredQuestions, requiredRightAnswerPercentToPass);
+
         ioService.printLine("");
         ioService.printLine("Test results: ");
-        ioService.printFormattedLine("Student: %s", testResult.getStudent().getFullName());
-        ioService.printFormattedLine("Answered questions count: %d", testResult.getAnsweredQuestions().size());
-        ioService.printFormattedLine("Right answers count: %d", testResult.getRightAnswersCount());
+        ioService.printFormattedLine("Student: %s", studentFullName);
+        ioService.printFormattedLine("Answered questions count: %d", answeredQuestions);
+        ioService.printFormattedLine("Right answers count: %d", rightAnswerCount);
 
-        if (testResult.getRightAnswersCount() >= testConfig.getRightAnswersCountToPass()) {
+        if (isPassed) {
             ioService.printLine("Congratulations! You passed test!");
             return;
         }
         ioService.printLine("Sorry. You fail test.");
+    }
+
+    private boolean isPassed(int rightAnswerCount, int answeredQuestions, int requiredRightAnswerPercentToPass) {
+        var requiredAnswersToPass = Math.ceil(
+                (double) answeredQuestions * requiredRightAnswerPercentToPass / 100
+        );
+        return rightAnswerCount >= requiredAnswersToPass;
     }
 }
