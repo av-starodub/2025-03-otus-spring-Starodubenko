@@ -3,3 +3,4 @@
 ## Группа '2024-07' <br></br>Cтудент `Стародубенко Александр`
 ### _Решения домашних заданий:_
 * ### [Set up context using xml config](https://github.com/av-starodub/2024-07-otus-spring-Starodubenko/pull/1/files)
+* ### [Set up context using annotation config](https://github.com/av-starodub/2025-03-otus-spring-Starodubenko/pull/2/files)
