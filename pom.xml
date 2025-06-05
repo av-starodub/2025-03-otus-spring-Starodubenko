@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.otus</groupId>
-    <artifactId>2024-07-otus-spring-Starodubenko</artifactId>
+    <artifactId>2025-03-otus-spring-Starodubenko</artifactId>
     <version>1.0</version>
 
     <packaging>pom</packaging>
@@ -13,5 +13,6 @@
     <modules>
         <module>hw01-xml-config</module>
         <module>hw02-annotation-config</module>
+        <module>hw03-spring-boot</module>
     </modules>
 </project>
