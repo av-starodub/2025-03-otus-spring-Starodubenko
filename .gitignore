@@ -36,7 +36,6 @@ buildNumber.properties
 
 # IntelliJ IDEA
 *.class
-*.log
 *.swp
 *.swo
 *.bak
@@ -51,8 +50,8 @@ out/
 **/application.yml
 **/application-*.properties
 **/application-*.yml
-!src/main/resources/application.properties
-!src/main/resources/application.yml
+!**/src/main/resources/application.properties
+!**/src/main/resources/application.yml
 
 # Log files
 *.log
