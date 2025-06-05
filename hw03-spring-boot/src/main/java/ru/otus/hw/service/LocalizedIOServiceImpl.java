@@ -48,7 +48,8 @@ public class LocalizedIOServiceImpl implements LocalizedIOService {
 
     @Override
     public void printFormattedLineLocalized(String code, Object... args) {
-        ioService.printLine(localizedMessagesService.getMessage(code, args));
+        var localizedMessageTemplate = localizedMessagesService.getMessage(code);
+        ioService.printFormattedLine(localizedMessageTemplate, args);
     }
 
     @Override
@@ -66,11 +67,12 @@ public class LocalizedIOServiceImpl implements LocalizedIOService {
         return ioService.readIntForRangeWithPrompt(min, max,
                 localizedMessagesService.getMessage(promptCode),
                 localizedMessagesService.getMessage(errorMessageCode)
-                );
+        );
     }
 
     @Override
     public String getMessage(String code, Object... args) {
         return localizedMessagesService.getMessage(code, args);
     }
+
 }
