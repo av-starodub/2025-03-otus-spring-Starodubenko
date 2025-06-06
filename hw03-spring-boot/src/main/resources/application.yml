@@ -6,7 +6,7 @@ spring:
     # Если false то будут браться сообщения из дефолтного файла, если true, то из файла соответствующего системной локали
     fallbackToSystemLocale: false
 test:
-  requiredPercentRightAnswersToPass: 0
+  requiredPercentRightAnswersToPass: 80
   rightAnswersCountToPass: 3
   locale: ru-RU
   fileNameByLocaleTag:
