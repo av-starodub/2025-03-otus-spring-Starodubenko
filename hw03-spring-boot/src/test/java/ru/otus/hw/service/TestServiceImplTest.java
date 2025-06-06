@@ -21,7 +21,7 @@ import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("TestServiceImplTest")
-public class TestServiceImplTest {
+class TestServiceImplTest {
 
     private final Student student = new Student("Dummy", "Bot");
 
@@ -49,7 +49,7 @@ public class TestServiceImplTest {
     @BeforeEach
     void setUp() {
         when(questionDao.findAll()).thenReturn(questions);
-        String studentAnswer = "2";
+        var studentAnswer = "2";
         when(ioService.readString()).thenReturn(studentAnswer);
     }
 

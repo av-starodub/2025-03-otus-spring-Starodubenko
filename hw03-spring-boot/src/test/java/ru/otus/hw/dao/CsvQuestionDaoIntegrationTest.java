@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CsvQuestionDaoIntegrationTest {
+class CsvQuestionDaoIntegrationTest {
 
     private static final String VALID_QUESTIONS_FILE = "valid-questions.csv";
 
