@@ -1,0 +1,18 @@
+${AnsiColor.BRIGHT_GREEN}
+${AnsiStyle.BOLD}
+    o__ __o       o                                 o                    ____o__ __o____                        o
+   /v     v\    _<|>_                              <|>                    /   \   /   \                        <|>
+  />       <\                                      / \                         \o/                             < >
+ _\o____          o    \o__ __o__ __o   \o_ __o    \o/    o__  __o              |        o__  __o       __o__   |
+      \_\__o__   <|>    |     |     |>   |    v\    |    /v      |>            < >      /v      |>     />  \    o__/_
+            \    / \   / \   / \   / \  / \    <\  / \  />      //              |      />      //      \o       |
+  \         /    \o/   \o/   \o/   \o/  \o/     /  \o/  \o    o/                o      \o    o/         v\      |
+   o       o      |     |     |     |    |     o    |    v\  /v __o            <|       v\  /v __o       <\     o
+   <\__ __/>     / \   / \   / \   / \  / \ __/>   / \    <\/> __/>            / \       <\/> __/>  _\o__</     <\__
+                                        \o/
+                                         |
+                                        / \
+
+            ${AnsiColor.GREEN}Spring Boot
+            ${AnsiColor.BRIGHT_YELLOW}${spring-boot.formatted-version}
+${AnsiColor.DEFAULT}
