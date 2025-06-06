@@ -63,5 +63,3 @@ jobs:
           else
             echo "No modules to build."
           fi
-        env:
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.12-7/x64
